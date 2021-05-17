@@ -38,8 +38,12 @@ Route::get('/', function () {
 
     // 4. view Property를 이용하기
     $view = View('index');
-    $view->greeting = "Hey~ WaSuuuuup";
-    $view->name = 'everyone';
+    $view->greeting = 'Hi';
+    $view->name = 'UmJunSik';
+    $view->items = ['UmJunSik', 'gajae', 'jaesuk'];
 
-    return $view;
+    // return $view;
+
+    $user = DB::connection('stu_khs')->table('test')->get();
+    return $user;
 });
