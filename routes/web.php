@@ -13,37 +13,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    $greeting = 'Hello';
-    $name = 'um';
+Route::get('/', 'IndexController@index');
+Route::resource('posts', 'PostsController');
+Route::resource('posts.comments', 'PostCommentController');
+Route::get('auth', function () {
+    $credentials = [
+        'email'    => 'john@example.com',
+        'password' => 'password'
+    ];
 
-    // 뷰에 데이터를 바인딩하는 여러 방법
+    if (! Auth::attempt($credentials)) {
+        return 'Incorrect username and password combination';
+    }
 
-    // 1. 메소드
-    // return view('index')->with([
-    //     'greeting' => $greeting,
-    //     'name'     => $name
-    // ]);
+    return redirect('protected');
+});
+Route::get('auth/logout', function () {
+    Auth::logout();
 
-    // 2. 인자로 넘기기
-    // return view('index', [
-    //     'greeting' => $greeting,
-    //     'name'     => $name
-    // ]);
+    return 'See you again~';
+});
+Route::get('protected', function () {
+    if (! Auth::check()) {
+        return 'Illegal access !!! Get out of here~';
+    }
 
-    // 3. 인자로 넘기기(compact 메소드)
-    // return view('index', 
-    //     compact('greeting', 'name')
-    // );
-
-    // 4. view Property를 이용하기
-    $view = View('index');
-    $view->greeting = 'Hi';
-    $view->name = 'UmJunSik';
-    $view->items = ['UmJunSik', 'gajae', 'jaesuk'];
-
-    // return $view;
-
-    $user = DB::connection('stu_khs')->table('test')->get();
-    return $user;
+    return 'Welcome back, ' . Auth::user()->name;
 });
